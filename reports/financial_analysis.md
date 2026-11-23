@@ -1,22 +1,22 @@
-# Samsung Electronics Financial Analysis
+# 삼성전자 재무 분석 보고서
 
-Generated: 2026-11-23 02:59
+생성 일시: 2026-11-23 02:59
 
-Source: OpenDART (consolidated statements; CFS)
+데이터 출처: 금융감독원 OpenDART (연결재무제표 기준)
 
-## Latest annual snapshot
+## 최신 연간 실적 요약
 
-- Year: 2025
-- Revenue: 333.6 T KRW
-- Operating profit: 43.6 T KRW
-- Net income: 44.3 T KRW
-- Operating margin: 13.1%
-- Debt ratio: 2966.1%
-- Current ratio: 232.8%
+- 기준 연도: 2025
+- 매출: 333.6 조원
+- 영업이익: 43.6 조원
+- 당기순이익: 44.3 조원
+- 영업이익률: 13.1%
+- 부채비율: 2966.1%
+- 유동비율: 232.8%
 
-## Annual trend
+## 연도별 실적 추이
 
-| Year | Revenue (T KRW) | Op. profit (T KRW) | Net income (T KRW) | Op. margin | Debt ratio | Current ratio |
+| 연도 | 매출 (조원) | 영업이익 (조원) | 당기순이익 (조원) | 영업이익률 | 부채비율 | 유동비율 |
 |---|---:|---:|---:|---:|---:|---:|
 | 2016 | 201.9 | 29.2 | 22.7 | 14.5% | 35.9% | 258.5% |
 | 2017 | 239.6 | 53.6 | 42.2 | 22.4% | 40.7% | 218.8% |
@@ -29,10 +29,12 @@ Source: OpenDART (consolidated statements; CFS)
 | 2024 | 300.9 | 32.7 | 0.0 | 10.9% | 30.3% | 243.3% |
 | 2025 | 333.6 | 43.6 | 44.3 | 13.1% | 2966.1% | 232.8% |
 
-## Validation
-- Records collected: 44
-- Balance-sheet equation checks passed: 31
-- Failed checks: 13
+## 데이터 검증
 
-## Interpretation
-Use revenue, profitability, liquidity and leverage trends together. Account mapping can differ by filing; missing values are not treated as zero. Investigate year-to-year movements alongside semiconductor demand, product mix, foreign exchange, capital expenditure and cash flow. This report is educational and is not investment advice.
+- 수집 데이터: 44건
+- 재무상태표 등식 검증 통과: 31건
+- 검증 실패: 13건
+
+## 해석 참고
+
+매출, 수익성, 유동성 및 재무 안정성 지표를 함께 확인해야 합니다. 보고서별 계정 분류나 데이터 제공 범위가 다를 수 있으며, 누락 값은 0으로 간주하지 않습니다. 연도별 변동은 반도체 수요, 제품 구성, 환율, 설비투자 및 현금흐름 등과 함께 검토하세요. 본 보고서는 학습 및 참고 목적이며 투자 권유가 아닙니다.
