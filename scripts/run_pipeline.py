@@ -84,15 +84,15 @@ def fmt(v, unit='T KRW'):
 
 def make_report(df):
     annual=df[df.report_code=='11011'].sort_values('year')
-    lines=['# Samsung Electronics Financial Analysis','',f'Generated: {pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")}','','Source: OpenDART (consolidated statements; CFS)','']
+    lines=['# 삼성전자 재무 분석 보고서','',f'생성 일시: {pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")}','','데이터 출처: 금융감독원 OpenDART (연결재무제표 기준)','']
     if annual.empty: annual=df.sort_values('year')
     latest=annual.iloc[-1]
-    lines += ['## Latest annual snapshot','',f'- Year: {int(latest.year)}',f'- Revenue: {fmt(latest.revenue)}',f'- Operating profit: {fmt(latest.operating_profit)}',f'- Net income: {fmt(latest.net_income)}',f'- Operating margin: {latest.operating_margin:.1f}%' if pd.notna(latest.operating_margin) else '- Operating margin: N/A',f'- Debt ratio: {latest.debt_ratio:.1f}%' if pd.notna(latest.debt_ratio) else '- Debt ratio: N/A',f'- Current ratio: {latest.current_ratio:.1f}%' if pd.notna(latest.current_ratio) else '- Current ratio: N/A','', '## Annual trend','', '| Year | Revenue (T KRW) | Op. profit (T KRW) | Net income (T KRW) | Op. margin | Debt ratio | Current ratio |','|---|---:|---:|---:|---:|---:|---:|']
+    lines += ['## 최신 연간 실적 요약','',f'- 기준 연도: {int(latest.year)}',f'- 매출: {fmt(latest.revenue)}',f'- 영업이익: {fmt(latest.operating_profit)}',f'- 당기순이익: {fmt(latest.net_income)}',f'- 영업이익률: {latest.operating_margin:.1f}%' if pd.notna(latest.operating_margin) else '- 영업이익률: 데이터 없음',f'- 부채비율: {latest.debt_ratio:.1f}%' if pd.notna(latest.debt_ratio) else '- 부채비율: 데이터 없음',f'- 유동비율: {latest.current_ratio:.1f}%' if pd.notna(latest.current_ratio) else '- 유동비율: 데이터 없음','', '## 연도별 실적 추이','', '| 연도 | 매출 (조원) | 영업이익 (조원) | 당기순이익 (조원) | 영업이익률 | 부채비율 | 유동비율 |','|---|---:|---:|---:|---:|---:|---:|']
     for _,r in annual.tail(10).iterrows():
         def val(x): return f'{x/1e12:.1f}' if pd.notna(x) else '—'
         def pct(x): return f'{x:.1f}%' if pd.notna(x) else '—'
         lines.append(f'| {int(r.year)} | {val(r.revenue)} | {val(r.operating_profit)} | {val(r.net_income)} | {pct(r.operating_margin)} | {pct(r.debt_ratio)} | {pct(r.current_ratio)} |')
-    lines += ['', '## Validation',f'- Records collected: {len(df)}',f'- Balance-sheet equation checks passed: {int(df.validated.sum()) if df.validated.notna().any() else 0}',f'- Failed checks: {int((df.validated==False).sum())}', '', '## Interpretation', 'Use revenue, profitability, liquidity and leverage trends together. Account mapping can differ by filing; missing values are not treated as zero. Investigate year-to-year movements alongside semiconductor demand, product mix, foreign exchange, capital expenditure and cash flow. This report is educational and is not investment advice.','']
+    lines += ['', '## 데이터 검증',f'- 수집 데이터: {len(df)}',f'- 재무상태표 등식 검증 통과: {int(df.validated.sum()) if df.validated.notna().any() else 0}',f'- 검증 실패: {int((df.validated==False).sum())}', '', '## 해석 참고', '매출, 수익성, 유동성 및 재무 안정성 지표를 함께 확인해야 합니다. 보고서별 계정 분류나 데이터 제공 범위가 다를 수 있으며, 누락 값은 0으로 간주하지 않습니다. 연도별 변동은 반도체 수요, 제품 구성, 환율, 설비투자 및 현금흐름 등과 함께 검토하세요. 본 보고서는 학습 및 참고 목적이며 투자 권유가 아닙니다.','']
     (REPORTS/'financial_analysis.md').write_text('\n'.join(lines),encoding='utf-8')
 
 if __name__=='__main__': collect()
