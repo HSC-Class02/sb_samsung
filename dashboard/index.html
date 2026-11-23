@@ -1,30 +1,29 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Samsung Electronics Financial Dashboard</title>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>삼성전자 재무 대시보드</title>
 <style>
 :root{--ink:#15222d;--muted:#61717e;--bg:#f5f8fa;--card:#fff;--accent:#9be15d;--blue:#57a5d8}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}header{padding:36px 6vw;background:#15222d;color:white}header h1{margin:0 0 10px;font-size:clamp(1.6rem,4vw,2.6rem)}header p{color:#c7d3dc;margin:0}.wrap{max-width:1200px;margin:0 auto;padding:24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}.card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 3px 18px #1423340b}.metric{font-size:1.7rem;font-weight:750;margin-top:8px}.label{font-size:.9rem;color:var(--muted)}section{margin:24px 0}h2{font-size:1.2rem;margin:0 0 14px}table{width:100%;border-collapse:collapse;font-size:.9rem;background:white}th,td{padding:12px;text-align:right;border-bottom:1px solid #e8edf0;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--muted);font-weight:600;background:#fafcfd}.scroll{overflow:auto;border-radius:12px}.pill{display:inline-block;background:#eaf5e2;padding:5px 9px;border-radius:20px;font-size:.8rem}.note{color:var(--muted);font-size:.85rem;line-height:1.6}.bar{height:12px;border-radius:12px;background:#e9eef1;overflow:hidden;margin:8px 0}.bar span{display:block;height:100%;background:var(--blue);width:0}footer{padding:20px 0;color:var(--muted);font-size:.82rem}@media(max-width:600px){.wrap{padding:14px}.card{padding:16px}}
 </style></head>
-<body><header><h1>Samsung Electronics</h1><p>DART Financial Agent · OpenDART financial statements & ratios</p></header>
+<body><header><h1>삼성전자</h1><p>OpenDART 재무 분석 · 재무제표 및 주요 재무비율</p></header>
 <div class="wrap"><div id="status" class="note">데이터 불러오는 중…</div><section><div class="grid" id="cards"></div></section>
-<section class="card"><h2>Annual financial trend</h2><p class="note">최근 연도별 매출 및 영업이익 (단위: 조원)</p><div id="chart"></div></section>
-<section class="card"><h2>Annual data</h2><div class="scroll"><table id="table"><thead><tr><th>연도</th><th>매출</th><th>영업이익</th><th>순이익</th><th>영업이익률</th><th>부채비율</th><th>유동비율</th></tr></thead><tbody></tbody></table></div></section>
-<section class="card"><h2>Financial ratios</h2><div id="ratios" class="grid"></div></section>
-<footer>Source: OpenDART · Samsung Electronics only · Automated monthly · <a href="https://github.com/HSC-Class02/sb_samsung">GitHub repository</a><br>Educational analysis only; not investment advice.</footer></div>
+<section class="card"><h2>연도별 매출 추이</h2><p class="note">최근 10개 연도 매출 (단위: 조원)</p><div id="chart"></div></section>
+<section class="card"><h2>연간 재무 데이터</h2><div class="scroll"><table id="table"><thead><tr><th>연도</th><th>매출</th><th>영업이익</th><th>당기순이익</th><th>영업이익률</th><th>부채비율</th><th>유동비율</th></tr></thead><tbody></tbody></table></div></section>
+<section class="card"><h2>주요 재무비율</h2><div id="ratios" class="grid"></div></section>
+<footer>출처: 금융감독원 OpenDART · 삼성전자 기준 · 매월 자동 업데이트 · <a href="https://github.com/HSC-Class02/sb_samsung">GitHub 저장소</a><br>학습 및 참고 목적이며 투자 권유가 아닙니다.</footer></div>
 <script>
-const fmtT=v=>v==null||!Number.isFinite(+v)?'—':(+v/1e12).toLocaleString('ko-KR',{maximumFractionDigits:1})+'조';
+const fmtT=v=>v==null||!Number.isFinite(+v)?'—':(+v/1e12).toLocaleString('ko-KR',{maximumFractionDigits:1})+'조원';
 const fmtP=v=>v==null||!Number.isFinite(+v)?'—':(+v).toFixed(1)+'%';
-const names={'revenue':'매출','operating_profit':'영업이익','net_income':'순이익'};
-fetch('./data.json').then(r=>{if(!r.ok)throw Error('data.json not found');return r.json()}).then(rows=>{
+fetch('./data.json').then(r=>{if(!r.ok)throw Error('data.json을 찾을 수 없습니다');return r.json()}).then(rows=>{
  const annual=rows.filter(r=>String(r.report_code)==='11011').sort((a,b)=>a.year-b.year);
  const data=annual.length?annual:rows.sort((a,b)=>a.year-b.year);
  const last=data[data.length-1]||{};
- document.getElementById('status').innerHTML='최신 데이터 기준: <span class="pill">'+(last.year||'—')+'년</span> · 수집 레코드 '+rows.length+'건';
- const cards=[['매출',fmtT(last.revenue)],['영업이익',fmtT(last.operating_profit)],['순이익',fmtT(last.net_income)],['영업이익률',fmtP(last.operating_margin)]];
+ document.getElementById('status').innerHTML='최신 데이터 기준: <span class="pill">'+(last.year||'—')+'년</span> · 수집 데이터 '+rows.length+'건';
+ const cards=[['매출',fmtT(last.revenue)],['영업이익',fmtT(last.operating_profit)],['당기순이익',fmtT(last.net_income)],['영업이익률',fmtP(last.operating_margin)]];
  document.getElementById('cards').innerHTML=cards.map(([l,v])=>'<div class="card"><div class="label">'+l+'</div><div class="metric">'+v+'</div></div>').join('');
  document.querySelector('#table tbody').innerHTML=data.slice().reverse().map(r=>'<tr><td>'+r.year+'</td><td>'+fmtT(r.revenue)+'</td><td>'+fmtT(r.operating_profit)+'</td><td>'+fmtT(r.net_income)+'</td><td>'+fmtP(r.operating_margin)+'</td><td>'+fmtP(r.debt_ratio)+'</td><td>'+fmtP(r.current_ratio)+'</td></tr>').join('');
  const max=Math.max(...data.map(r=>Math.abs(+r.revenue||0)),1);
- document.getElementById('chart').innerHTML=data.slice(-10).map(r=>'<div style="display:grid;grid-template-columns:60px 1fr 100px;gap:10px;align-items:center;margin:9px 0"><div>'+r.year+'</div><div><div class="bar"><span style="width:'+Math.max(0,+r.revenue||0)/max*100+'%"></span></div></div><div style="text-align:right">'+fmtT(r.revenue)+'</div></div>').join('');
- const ratio=[['부채비율',fmtP(last.debt_ratio)],['유동비율',fmtP(last.current_ratio)],['자기자본비율',fmtP(last.equity_ratio)],['ROA',fmtP(last.roa)],['ROE',fmtP(last.roe)],['순이익률',fmtP(last.net_margin)]];
+ document.getElementById('chart').innerHTML=data.slice(-10).map(r=>'<div style="display:grid;grid-template-columns:60px 1fr 100px;gap:10px;align-items:center;margin:9px 0"><div>'+r.year+'년</div><div><div class="bar"><span style="width:'+Math.max(0,+r.revenue||0)/max*100+'%"></span></div></div><div style="text-align:right">'+fmtT(r.revenue)+'</div></div>').join('');
+ const ratio=[['부채비율',fmtP(last.debt_ratio)],['유동비율',fmtP(last.current_ratio)],['자기자본비율',fmtP(last.equity_ratio)],['총자산이익률 (ROA)',fmtP(last.roa)],['자기자본이익률 (ROE)',fmtP(last.roe)],['순이익률',fmtP(last.net_margin)]];
  document.getElementById('ratios').innerHTML=ratio.map(([l,v])=>'<div class="card"><div class="label">'+l+'</div><div class="metric">'+v+'</div></div>').join('');
-}).catch(e=>{document.getElementById('status').textContent='데이터를 아직 생성하지 못했습니다. GitHub Actions에서 DART Financial Agent를 실행하고 DART_API_KEY Secret 설정을 확인하세요. ('+e.message+')'});
+}).catch(e=>{document.getElementById('status').textContent='데이터를 아직 생성하지 못했습니다. GitHub Actions에서 재무 분석 자동화를 실행하고 DART_API_KEY Secret 설정을 확인하세요. ('+e.message+')'});
 </script></body></html>
