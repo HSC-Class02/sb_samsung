@@ -21,7 +21,7 @@ def dart(endpoint, params):
     resp = requests.get(f'{BASE}/{endpoint}.json', params=params, timeout=30)
     resp.raise_for_status(); body = resp.json()
     if body.get('status') not in ('000', '013'):
-        raise RuntimeError(f'OpenDART {endpoint}: {body.get("status")} {body.get('message')}')
+        raise RuntimeError('OpenDART {}: {} {}'.format(endpoint, body.get('status'), body.get('message')))
     return body
 
 
