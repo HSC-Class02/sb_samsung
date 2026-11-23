@@ -1,6 +1,6 @@
 # Samsung Electronics Financial Analysis
 
-Generated: 2026-11-23 02:46
+Generated: 2026-11-23 02:48
 
 Source: OpenDART (consolidated statements; CFS)
 
