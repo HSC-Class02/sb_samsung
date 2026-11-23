@@ -43,6 +43,8 @@ jobs:
           if git diff --cached --quiet; then echo 'No data changes'; else git commit -m 'chore: update DART data and report'; fi
           git push origin main
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dashboard
