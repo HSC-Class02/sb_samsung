@@ -1,24 +1,29 @@
-# Samsung Electronics DART Financial Agent
+# 삼성전자 OpenDART 재무 분석 에이전트
 
-Automated financial-data collection and analysis for Samsung Electronics using OpenDART. This implementation follows the available `ms_samsung` project documentation; the original source files were not accessible, so this is a functional reproduction rather than a byte-for-byte clone.
+OpenDART API를 활용해 삼성전자의 재무 데이터를 자동 수집하고, 주요 재무 지표를 분석하며, 보고서와 웹 대시보드를 생성하는 프로젝트입니다.
 
+## 주요 기능
+- 삼성전자 사업보고서·반기보고서·분기보고서 재무 데이터 수집
+- 연결재무제표 우선 분석
+- 주요 재무비율 계산 및 데이터 검증
+- 재무 분석 보고서(Markdown) 자동 생성
+- GitHub Pages 대시보드 제공
+- 매월 1일 자동 업데이트 및 수동 실행 지원
 
-## Features
-- Collect annual, semiannual and quarterly financial statements from OpenDART (2015 onward)
-- Consolidated statements prioritized
-- Financial ratios and validation checks
-- Markdown report and GitHub Pages dashboard
-- Monthly scheduled update on the 1st; manual Actions run supported
+## 실행 및 설정
+1. 저장소 **Settings → Secrets and variables → Actions**에서 `DART_API_KEY` Secret을 등록합니다.
+2. **Actions → DART Financial Agent → Run workflow**를 선택해 수동 실행합니다.
+3. **Settings → Pages**에서 배포 소스를 **GitHub Actions**로 설정합니다.
 
-## Setup
-1. In repository **Settings → Secrets and variables → Actions**, add `DART_API_KEY`.
-2. Run **Actions → DART Financial Agent → Run workflow**.
-3. Enable GitHub Pages in Settings → Pages, source **GitHub Actions**.
+## 주요 결과물
+- 재무 분석 보고서: `reports/financial_analysis.md`
+- 대시보드: GitHub Pages
+- 재무 데이터: `data/financials.csv`, `data/metrics.csv`
+- 대시보드 데이터: `dashboard/data.json`
 
-## Reports
-- Generated report: `reports/financial_analysis.md`
-- Dashboard: GitHub Pages site
-
-
-## Scope
-Samsung Electronics only (corp code `00126380`); data from 2015 onward. Filing codes: annual `11011`, half-year `11012`, Q1 `11013`, Q3 `11014`. Data availability and OpenDART response format may vary. Educational analysis only, not investment advice.
+## 분석 범위 및 기준
+- 대상 기업: 삼성전자 (고유번호 `00126380`)
+- 수집 시작 연도: 2015년
+- 보고서 유형: 사업보고서(`11011`), 반기보고서(`11012`), 1분기보고서(`11013`), 3분기보고서(`11014))
+- 데이터 제공: 금융감독원 OpenDART
+- 본 프로젝트는 학습 및 참고 목적이며 투자 권유가 아닙니다. 보고서별 계정명과 데이터 제공 범위가 다를 수 있습니다.
