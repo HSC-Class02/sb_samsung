@@ -1,4 +1,5 @@
 name: DART Financial Agent
+
 on:
   push:
     branches: [main]
@@ -11,42 +12,69 @@ on:
   schedule:
     - cron: '0 0 1 * *'
   workflow_dispatch:
+
 permissions:
   contents: write
   pages: write
   id-token: write
+
 concurrency:
   group: dart-financial-agent
   cancel-in-progress: false
+
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: pip
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Collect DART data and build report
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
-        run: python scripts/run_pipeline.py
-      - name: Sync generated files and commit
+        run: |
+          python -u scripts/run_pipeline.py
+
+      - name: Verify generated files
+        run: |
+          test -s dashboard/data.json
+          test -s reports/financial_analysis.md
+          test -s data/financials.csv
+          test -s data/metrics.csv
+
+      - name: Commit generated data and report
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git stash push -u -m 'generated DART outputs'
-          git pull --rebase origin main
-          git stash pop
-          git add data dashboard/data.json reports/financial_analysis.md
-          if git diff --cached --quiet; then echo 'No data changes'; else git commit -m 'chore: update DART data and report'; fi
-          git push origin main
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          git add data/financials.csv data/metrics.csv dashboard/data.json reports/financial_analysis.md
+          if git diff --cached --quiet; then
+            echo "Generated files have no changes; skipping commit."
+          else
+            git commit -m "chore: update DART financial data and report"
+            git pull --rebase origin main
+            git push origin main
+          fi
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload dashboard artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dashboard
-      - uses: actions/deploy-pages@v4
+
+      - name: Deploy GitHub Pages
+        uses: actions/deploy-pages@v4
